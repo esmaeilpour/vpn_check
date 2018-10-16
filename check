@@ -1,0 +1,11 @@
+#!/bin/bash
+
+VPN_HOST="$(grep ovadd.com configs/*.ovpn | cut -d' ' -f2  | fping -e | sed -e 's,is alive (,,g' | sed -e 's, ms),,g' | sort -t' ' -n -k2 | head -n1 | cut -d' ' -f1)"
+
+sed -e s/VPN_HOST/$VPN_HOST/g configs/template > client.conf
+
+systemctl daemon-reload
+
+service openvpn restart
+
+echo "${VPN_HOST}"
